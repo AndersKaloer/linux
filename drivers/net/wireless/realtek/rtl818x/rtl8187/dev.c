@@ -40,7 +40,7 @@ MODULE_AUTHOR("Andrea Merello <andrea.merello@gmail.com>");
 MODULE_AUTHOR("Herton Ronaldo Krzesinski <herton@mandriva.com.br>");
 MODULE_AUTHOR("Hin-Tak Leung <htl10@users.sourceforge.net>");
 MODULE_AUTHOR("Larry Finger <Larry.Finger@lwfinger.net>");
-MODULE_DESCRIPTION("RTL8187/RTL8187B USB wireless driver");
+MODULE_DESCRIPTION("RTL8187/RTL8187B USB wireless driver with SOF_TIMESTAMPING_TX_SOFTWARE support");
 MODULE_LICENSE("GPL");
 
 static struct usb_device_id rtl8187_table[] = {
@@ -246,6 +246,9 @@ static void rtl8187_tx(struct ieee80211_hw *dev,
 		kfree_skb(skb);
 		return;
 	}
+
+	/* Report tx timestamp */
+	skb_tx_timestamp(skb);
 
 	flags = skb->len;
 	flags |= RTL818X_TX_DESC_FLAG_NO_ENC;
